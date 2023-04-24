@@ -10,7 +10,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - /data/redis/data:/data
+      - /Users/hansomo/Documents/Projects/StockEngine/data/redis/data:/data
 
   # Minio
   minio:
@@ -22,7 +22,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - /data/minio/data:/data
+      - /Users/hansomo/Documents/Projects/StockEngine/data/minio/data:/data
     command: "server /data"
 
   # Analysis Engine
@@ -73,7 +73,7 @@ services:
     volumes:
       # please run this from the repo
       # base directory
-      - /data/sa/notebooks:/data/sa/notebooks
+      - /Users/hansomo/Documents/Projects/StockEngine/data/sa/notebooks:/data/sa/notebooks
     ports:
       - "8888:8888"
       - "8889:8889"
@@ -93,6 +93,6 @@ services:
     depends_on:
       - redis
       - minio
-    entrypoint: "/bin/sh -c 'cd /opt/sa &&
+    entrypoint: "/bin/sh -c 'cd /opt/sa && echo 123 &&
                  . /opt/venv/bin/activate &&
                  /opt/sa/tools/start-dataset-collection.sh'"

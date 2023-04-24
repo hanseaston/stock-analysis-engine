@@ -1,8 +1,12 @@
 #!/bin/bash
 
+
+# TODO: need to change the path for this
 if [[ -e /opt/sa/analysis_engine/scripts/common_bash.sh ]]; then
     source /opt/sa/analysis_engine/scripts/common_bash.sh
 elif [[ -e ./analysis_engine/scripts/common_bash.sh ]]; then
+    # It should hit here instead
+    echo "found common_bash.sh"
     source ./analysis_engine/scripts/common_bash.sh
 fi
 
@@ -12,29 +16,33 @@ export PATH=${PATH}:/usr/bin:/usr/local/bin
 # probably not ideal but needed for working on MacOS
 # will also need to manually add:
 # /data to Docker -> Preferences -> File Sharing
-if [[ ! -e /data ]]; then
-    sudo mkdir -p -m 777 /data
-    if [[ ! -e /data/redis/data ]]; then
-        sudo mkdir -p -m 777 /data/redis/data
+
+data_dir=$PWD/data
+
+if [[ ! -e $data_dir ]]; then
+    sudo mkdir -p -m 777 $data_dir
+    if [[ ! -e $data_dir/redis/data ]]; then
+        sudo mkdir -p -m 777 $data_dir/redis/data
     fi
-    if [[ ! -e /data/minio/data ]]; then
-        sudo mkdir -p -m 777 /data/minio/data
+    if [[ ! -e $data_dir/minio/data ]]; then
+        sudo mkdir -p -m 777 $data_dir/minio/data
     fi
-    if [[ ! -e /data/sa/notebooks/dev ]]; then
-        sudo mkdir -p -m 777 /data/sa/notebooks/dev
+    if [[ ! -e $data_dir/sa/notebooks/dev ]]; then
+        sudo mkdir -p -m 777 $data_dir/sa/notebooks/dev
     fi
-    if [[ ! -e /data/registry ]]; then
-        sudo mkdir -p -m 777 /data/registry
+    if [[ ! -e $data_dir/registry ]]; then
+        sudo mkdir -p -m 777 $data_dir/registry
     fi
-    if [[ ! -e /data/registry/auth ]]; then
-        sudo mkdir -p -m 777 /data/registry/auth
-        docker run --entrypoint htpasswd registry:2 -Bbn trex 123321 > /data/registry/auth/htpasswd
+    if [[ ! -e $data_dir/registry/auth ]]; then
+        sudo mkdir -p -m 777 $data_dir/registry/auth
+        docker run --entrypoint htpasswd registry:2.7.0 -Bbn trex 123321 > $data_dir/registry/auth/htpasswd
     fi
-    if [[ ! -e /data/registry/data ]]; then
-        sudo mkdir -p -m 777 /data/registry/data
+    if [[ ! -e $data_dir/registry/datca ]]; then
+        sudo mkdir -p -m 777 $data_dir/registry/data
     fi
-    cp -r ./compose/docker/notebooks/* /data/sa/notebooks
+    sudo cp -r ./compose/docker/notebooks/* $data_dir/sa/notebooks
 fi
+
 
 is_mac="0"
 os_type=`uname -s`
@@ -80,8 +88,8 @@ do
     elif [[ "${i}" == "-jo" ]]; then
         debug="1"
         compose="notebook-integration.yml"
-        rm -rf /data/sa/notebooks/
-        cp -r ./compose/docker/notebooks/* /data/sa/notebooks
+        rm -rf $data_dir/sa/notebooks/
+        cp -r ./compose/docker/notebooks/* $data_dir/sa/notebooks
     # automation - dataset collection
     elif [[ "${i}" == "-c" ]]; then
         debug="1"

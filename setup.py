@@ -42,9 +42,9 @@ requires_that_fail_on_rtd = [
     'h5py',
     'keras',
     'scikit-learn',
-    'tables',
+    # 'tables',  # TODO: doesn't work currently with my OS
     'ta-lib',
-    'tensorflow'
+    # 'tensorflow' # TODO: doesn't work currently with my OS
 ]
 
 install_requires = []
